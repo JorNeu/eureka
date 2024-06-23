@@ -1,6 +1,6 @@
 package com.microservice.student.controller;
 
-import com.microservice.student.entities.Student;
+import com.microservice.student.dto.StudentDTO;
 import com.microservice.student.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,17 +14,20 @@ public class StudentController {
     private IStudentService studentService;
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveStudent(@RequestBody Student student){
-        studentService.save(student);
+    public void saveStudent(@RequestBody StudentDTO studentDTO){
+        studentService.save(studentDTO);
     }
+
     @GetMapping("/all")
-    public ResponseEntity<?>findAllStudent(){
+    public ResponseEntity<?> findAllStudents(){
         return ResponseEntity.ok(studentService.findAll());
     }
+
     @GetMapping("/search/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id){
         return ResponseEntity.ok(studentService.findById(id));
     }
+
     @GetMapping("/search-by-course/{idCourse}")
     public ResponseEntity<?> findByIdCourse(@PathVariable Long idCourse){
         return ResponseEntity.ok(studentService.findByIdCourse(idCourse));

@@ -1,32 +1,54 @@
 package com.microservice.student.service;
 
+import com.microservice.student.Mapper.StudentMapper;
 import com.microservice.student.entities.Student;
 import com.microservice.student.persistence.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.microservice.student.dto.StudentDTO;
+import com.microservice.student.exception.StudentAlreadyExistsException;
+import com.microservice.student.exception.CourseNotFoundException;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class StudentServiceImpl implements IStudentService {
+
     @Autowired
     private StudentRepository studentRepository;
-    @Override
-    public List<Student> findAll() {
-        return (List<Student>) studentRepository.findAll() ;
+    @Autowired
+    private StudentMapper studentMapper;
+
+    public StudentServiceImpl() {
     }
 
     @Override
-    public Student findById(Long id) {
-        return studentRepository.findById(id).orElseThrow();
+    public List<StudentDTO> findAll() {
+        List<Student> students = (List<Student>) studentRepository.findAll();
+        return students.stream()
+                .map(StudentMapper::toStudentDTO)
+                .collect(Collectors.toList());
     }
-
     @Override
-    public void save(Student student) {
+    public StudentDTO findById(Long id) {
+        Student student = studentRepository.findById(id).orElseThrow();
+        return StudentMapper.toStudentDTO(student);
+    }
+    @Override
+    public void save(StudentDTO studentDTO) {
+        studentRepository.findByNameAndLastName(studentDTO.getName(), studentDTO.getLastName())
+                .ifPresent(s -> {
+                    throw new StudentAlreadyExistsException("Student with the same name and last name already exists");
+                });
+        Student student = StudentMapper.toStudent(studentDTO);
         studentRepository.save(student);
     }
-
     @Override
-    public List<Student> findByIdCourse(Long idCourse) {
-        return studentRepository.findAllByStudent(idCourse);
+    public List<StudentDTO> findByIdCourse(Long idCourse) {
+        List<Student> students = studentRepository.findAllByStudent(idCourse);
+        return students.stream()
+                .map(StudentMapper::toStudentDTO)
+                .collect(Collectors.toList());
     }
 }

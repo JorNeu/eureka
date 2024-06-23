@@ -7,10 +7,10 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/coursesDb
     username: postgres
-    password: 794682
+    password: admin123
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 eureka:
@@ -18,7 +18,10 @@ eureka:
     hostname: localhost
   client:
     service-url:
-      defaultzone: http://localhost:8760/eureka
+      defaultZone: http://localhost:8760/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
 
 
 

@@ -1,12 +1,13 @@
 package com.microservice.student.service;
 
+import com.microservice.student.dto.StudentDTO;
 import com.microservice.student.entities.Student;
 
 import java.util.List;
 
 public interface IStudentService {
-    List<Student> findAll();
-    Student findById(Long id);
-    void save(Student student);
-    List<Student> findByIdCourse(Long idCourse);
+    List<StudentDTO> findAll();
+    StudentDTO findById(Long id);
+    void save(StudentDTO studentDTO);
+    List<StudentDTO> findByIdCourse(Long idCourse);
 }
